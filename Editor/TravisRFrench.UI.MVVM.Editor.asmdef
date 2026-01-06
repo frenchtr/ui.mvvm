@@ -1,0 +1,16 @@
+{
+    "name": "TravisRFrench.UI.MVVM.Editor",
+    "rootNamespace": "TravisRFrench.UI.MVVM",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

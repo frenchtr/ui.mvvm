@@ -1,0 +1,14 @@
+{
+    "name": "TravisRFrench.UI.MVVM.Runtime",
+    "rootNamespace": "TravisRFrench.UI.MVVM",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

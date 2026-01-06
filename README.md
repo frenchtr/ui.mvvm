@@ -1,2 +1,2 @@
-# Unity Package Template
-A template for creating Unity packages.
+# MVVM Framework for Unity
+An MVVM framework for Unity.

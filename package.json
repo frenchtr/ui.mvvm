@@ -1,26 +1,18 @@
 {
-    "name": "com.travisrfrench.unity-package-template",
-    "displayName": "Unity Package Template",
+    "name": "com.travisrfrench.ui.mvvm",
+    "displayName": "MVVM Framework for Unity",
     "version": "0.1.0",
-    "description": "A template for building UPM packages in Unity.",
+    "description": "An MVVM framework for Unity.",
     "author": {
         "name": "Travis R. French"
     },
-    "homepage": "https://github.com/frenchtr/unity-package-template.git",
+    "homepage": "https://github.com/frenchtr/ui.mvvm",
     "keywords": [
-        "Unity",
-        "Package",
-        "Manager",
-        "Template",
-        "UPM"
+        "UI",
+        "UGUI",
+        "MVVM",
+        "Framework"
     ],
     "dependencies": {},
-    "samples": [
-        {
-            "displayName": "Example Sample",
-            "description": "An example that shows how to setup samples.",
-            "path": "Samples~/ExampleSample"
-        }
-    ],
     "license": "See <LICENSE.md>"
 }
