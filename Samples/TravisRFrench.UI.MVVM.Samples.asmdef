@@ -1,10 +1,11 @@
 {
-    "name": "TravisRFrench.UI.MVVM.Runtime",
+    "name": "TravisRFrench.UI.MVVM.Samples",
     "rootNamespace": "TravisRFrench.UI.MVVM",
     "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:86c1c2ee6a6d7ff4484174ab81c04b85",
         "GUID:d854be2bc57a0c4458a7986ec7d61851",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:150d89fbd305cb246af7cdc40c2dfab7"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
