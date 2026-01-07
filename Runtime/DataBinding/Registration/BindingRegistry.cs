@@ -12,7 +12,9 @@ namespace TravisRFrench.UI.MVVM.DataBinding.Registration
         {
             this.bindings = new List<IBinding>();
         }
-        
+
+        public IReadOnlyList<IBinding> Bindings => this.bindings.AsReadOnly();
+
         public void Register(IBinding binding)
         {
             if (this.bindings.Contains(binding))
@@ -38,6 +40,8 @@ namespace TravisRFrench.UI.MVVM.DataBinding.Registration
             {
                 binding.Dispose();
             }
+            
+            this.bindings.Clear();
         }
     }
 }

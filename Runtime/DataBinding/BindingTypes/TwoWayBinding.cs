@@ -1,116 +1,116 @@
 using System;
-using System.ComponentModel;
-using TravisRFrench.UI.MVVM.Core;
+using System.Collections.Generic;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 {
-    public sealed class TwoWayBinding<TValue> : Binding
+    public sealed class TwoWayBinding<T> : Binding
     {
-        private readonly IObservable source;
-        private readonly string sourcePropertyName;
-        private readonly IValueChangeNotifier target;
-        private readonly Func<TValue> sourceGetter;
-        private readonly Action<TValue> sourceSetter;
-        private readonly Func<TValue> targetGetter;
-        private readonly Action<TValue> targetSetter;
-        private bool isRefreshingFromSource;
-        private bool isRefreshingFromTarget;
+        private readonly Func<T> getA;
+        private readonly Action<T> setA;
+        private readonly Subscription onAChanged;
+
+        private readonly Func<T> getB;
+        private readonly Action<T> setB;
+        private readonly Subscription onBChanged;
+
+        private readonly Func<T, T, bool> areEqual;
+
+        private bool refreshingFromA;
+        private bool refreshingFromB;
+
+        private readonly Action aChangedHandler;
+        private readonly Action bChangedHandler;
 
         public TwoWayBinding(
-            IObservable source, 
-            string sourcePropertyName,
-            IValueChangeNotifier target,
-            Func<TValue> sourceGetter,
-            Action<TValue> sourceSetter,
-            Func<TValue> targetGetter,
-            Action<TValue> targetSetter)
+            Func<T> getA,
+            Action<T> setA,
+            Subscription onAChanged,
+            Func<T> getB,
+            Action<T> setB,
+            Subscription onBChanged,
+            Func<T, T, bool> areEqual = null)
         {
-            this.source = source;
-            this.sourcePropertyName = sourcePropertyName;
-            this.target = target;
-            this.sourceGetter = sourceGetter;
-            this.sourceSetter = sourceSetter;
-            this.targetGetter = targetGetter;
-            this.targetSetter = targetSetter;
+            this.getA = getA ?? throw new ArgumentNullException(nameof(getA));
+            this.setA = setA ?? throw new ArgumentNullException(nameof(setA));
+            this.onAChanged = onAChanged;
+
+            this.getB = getB ?? throw new ArgumentNullException(nameof(getB));
+            this.setB = setB ?? throw new ArgumentNullException(nameof(setB));
+            this.onBChanged = onBChanged;
+
+            this.areEqual = areEqual ?? EqualityComparer<T>.Default.Equals;
+
+            this.aChangedHandler = this.OnAChanged;
+            this.bChangedHandler = this.OnBChanged;
         }
 
         protected override void OnBind()
         {
-            this.source.PropertyChanged += this.OnSourcePropertyChanged;
-            this.target.ValueChanged += this.OnTargetValueChanged;
+            this.onAChanged.Subscribe(this.aChangedHandler);
+            this.onBChanged.Subscribe(this.bChangedHandler);
         }
 
         protected override void OnUnbind()
         {
-            this.source.PropertyChanged -= this.OnSourcePropertyChanged;
-            this.target.ValueChanged -= this.OnTargetValueChanged;
+            this.onAChanged.Unsubscribe(this.aChangedHandler);
+            this.onBChanged.Unsubscribe(this.bChangedHandler);
         }
 
-        public override void Refresh()
+        /// <summary>Default refresh pushes A -> B.</summary>
+        public override void Refresh() => this.RefreshFromA();
+
+        private void RefreshFromA()
         {
-            if (this.isRefreshingFromTarget)
+            if (!this.IsBound || this.refreshingFromB)
             {
                 return;
             }
 
             try
             {
-                this.isRefreshingFromSource = true;
+                this.refreshingFromA = true;
 
-                var value = this.sourceGetter();
-                this.targetSetter(value);
+                var a = this.getA();
+                var b = this.getB();
+
+                // Optional: avoid redundant sets (can prevent feedback loops in some systems).
+                if (!this.areEqual(a, b))
+                {
+                    this.setB(a);
+                }
             }
             finally
             {
-                this.isRefreshingFromSource = false;
+                this.refreshingFromA = false;
             }
         }
-        
-        private void RefreshFromTarget()
+
+        private void RefreshFromB()
         {
-            if (this.isRefreshingFromSource)
+            if (!this.IsBound || this.refreshingFromA)
             {
                 return;
             }
 
             try
             {
-                this.isRefreshingFromTarget = true;
+                this.refreshingFromB = true;
 
-                var value = this.targetGetter();
-                this.sourceSetter(value);
+                var b = this.getB();
+                var a = this.getA();
+
+                if (!this.areEqual(a, b))
+                {
+                    this.setA(b);
+                }
             }
             finally
             {
-                this.isRefreshingFromTarget = false;
+                this.refreshingFromB = false;
             }
         }
-        
-        private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if (!this.IsBound)
-            {
-                return;
-            }
 
-            var name = args?.PropertyName;
-
-            if (string.IsNullOrEmpty(this.sourcePropertyName) ||
-                string.IsNullOrEmpty(name) ||
-                string.Equals(name, this.sourcePropertyName, StringComparison.Ordinal))
-            {
-                this.Refresh();
-            }
-        }
-        
-        private void OnTargetValueChanged()
-        {
-            if (!this.IsBound)
-            {
-                return;
-            }
-            
-            this.RefreshFromTarget();
-        }
+        private void OnAChanged() => this.RefreshFromA();
+        private void OnBChanged() => this.RefreshFromB();
     }
 }

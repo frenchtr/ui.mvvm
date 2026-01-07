@@ -1,49 +1,47 @@
 using System;
+using TravisRFrench.UI.MVVM.DataBinding.Builders;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 {
-    public abstract class Binding : IBinding
-    {
-        public bool IsBound { get; private set; }
-        
-        public void Bind()
-        {
-            if (this.IsBound)
-            {
-                return;
-            }
-            
-            this.OnBind();
-            this.Refresh();
-            this.IsBound = true;
-        }
-        
-        public void Unbind()
-        {
-            if (!this.IsBound)
-            {
-                return;
-            }
-            
-            this.OnUnbind();
-            this.IsBound = false;
-        }
-        
-        public virtual void Refresh()
-        {
-        }
-        
-        void IDisposable.Dispose()
-        {
-            this.Unbind();
-        }
-        
-        protected virtual void OnBind()
-        {
-        }
+	/// <summary>
+	/// Disposable binding lifetime. Call Bind() to start, Dispose() (or Unbind()) to stop.
+	/// </summary>
+	public abstract class Binding : IBinding, IDisposable
+	{
+		public static OneWayBindingBuilder<TValue> CreateOneWay<TValue>() => new();
+		public static TwoWayBindingBuilder<TValue> CreateTwoWay<TValue>() => new();
+		public static CommandBindingBuilder CreateCommand() => new();
 
-        protected virtual void OnUnbind()
-        {
-        }
-    }
+		public bool IsBound { get; private set; }
+
+		public void Bind()
+		{
+			if (this.IsBound)
+			{
+				return;
+			}
+
+			this.IsBound = true;
+			this.OnBind();
+		}
+
+		public void Unbind()
+		{
+			if (!this.IsBound)
+			{
+				return;
+			}
+
+			this.OnUnbind();
+			this.IsBound = false;
+		}
+
+		public void Dispose() => this.Unbind();
+
+		/// <summary>Pushes the current A value into B (or equivalent for derived types).</summary>
+		public abstract void Refresh();
+
+		protected abstract void OnBind();
+		protected abstract void OnUnbind();
+	}
 }

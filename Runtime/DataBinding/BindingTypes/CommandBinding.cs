@@ -2,34 +2,48 @@ using System;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 {
-    public sealed class CommandBinding : Binding
-    {
-        private readonly IInvocationNotifier target;
-        private readonly Action sourceCommand;
-        
-        public CommandBinding(IInvocationNotifier target, Action sourceCommand)
-        {
-            this.target = target;
-            this.sourceCommand = sourceCommand;
-        }
+	/// <summary>
+	/// Binds an invocation signal (target event) to a command action (source).
+	/// Framework-agnostic: notification is supplied via a Subscription.
+	/// </summary>
+	public sealed class CommandBinding : Binding
+	{
+		private readonly Subscription onInvoked;
+		private readonly Action command;
 
-        protected override void OnBind()
-        {
-            this.target.Invoked += this.OnTargetInvoked;
-        }
+		private readonly Action invokedHandler;
 
-        protected override void OnUnbind()
-        {
-            this.target.Invoked -= this.OnTargetInvoked;
-        }
+		public CommandBinding(Subscription onInvoked, Action command)
+		{
+			this.onInvoked = onInvoked;
+			this.command = command;
 
-        public override void Refresh()
-        {
-        }
-        
-        private void OnTargetInvoked()
-        {
-            this.sourceCommand?.Invoke();
-        }
-    }
+			this.invokedHandler = this.OnInvoked;
+		}
+
+		protected override void OnBind()
+		{
+			this.onInvoked.Subscribe(this.invokedHandler);
+		}
+
+		protected override void OnUnbind()
+		{
+			this.onInvoked.Unsubscribe(this.invokedHandler);
+		}
+
+		public override void Refresh()
+		{
+			// No-op: commands are event driven.
+		}
+
+		private void OnInvoked()
+		{
+			if (!this.IsBound)
+			{
+				return;
+			}
+
+			this.command?.Invoke();
+		}
+	}
 }

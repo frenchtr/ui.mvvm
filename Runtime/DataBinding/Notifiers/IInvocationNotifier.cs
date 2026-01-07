@@ -1,6 +1,6 @@
 using System;
 
-namespace TravisRFrench.UI.MVVM.DataBinding
+namespace TravisRFrench.UI.MVVM.DataBinding.Notifiers
 {
     public interface IInvocationNotifier
     {

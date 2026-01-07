@@ -17,6 +17,11 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
                 .To<UserRegistrationService>()
                 .FromNew()
                 .AsSingleton();
+
+            container.Bind<IUserRegistrationFormViewModel>()
+                .To<UserRegistrationFormViewModel>()
+                .FromNew()
+                .AsSingleton();
         }
     }
 }

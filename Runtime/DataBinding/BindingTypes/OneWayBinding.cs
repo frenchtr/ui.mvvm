@@ -1,59 +1,116 @@
 using System;
-using System.ComponentModel;
-using TravisRFrench.UI.MVVM.Core;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 {
-    public sealed class OneWayBinding<TValue> : Binding
+    /// <summary>
+    /// Binds A -> B. When A changes, pushes A's value into B.
+    /// Agnostic to MVVM; all notification and get/set behavior is supplied by delegates.
+    /// </summary>
+    public sealed class OneWayBinding<T> : Binding
     {
-        private readonly IObservable observable;
-        private readonly string observablePropertyName;
-        private readonly Func<TValue> getter;
-        private readonly Action<TValue> setter;
+        private readonly Func<T> getSource;
+        private readonly Action<T> setTarget;
+        private readonly Subscription onSourceChanged;
 
-        public OneWayBinding(IObservable observable,
-            string observablePropertyName,
-            Func<TValue> getter,
-            Action<TValue> setter)
+        private readonly Action sourceChangedHandler;
+
+        public OneWayBinding(
+            Func<T> getSource,
+            Action<T> setTarget,
+            Subscription onSourceChanged)
         {
-            this.observable = observable;
-            this.observablePropertyName = observablePropertyName;
-            this.getter = getter;
-            this.setter = setter;
+            this.getSource = getSource ?? throw new ArgumentNullException(nameof(getSource));
+            this.setTarget = setTarget ?? throw new ArgumentNullException(nameof(setTarget));
+            this.onSourceChanged = onSourceChanged;
+
+            this.sourceChangedHandler = this.OnSourceChanged;
         }
 
         protected override void OnBind()
         {
-            this.observable.PropertyChanged += this.OnObservablePropertyChanged;
+            this.onSourceChanged.Subscribe(this.sourceChangedHandler);
         }
 
         protected override void OnUnbind()
         {
-            this.observable.PropertyChanged -= this.OnObservablePropertyChanged;
+            this.onSourceChanged.Unsubscribe(this.sourceChangedHandler);
         }
-        
+
         public override void Refresh()
         {
-            var value = this.getter();
-            this.setter(value);
-        }
-        
-        private void OnObservablePropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            var name = args?.PropertyName;
-            
-            // If no name was provided, refresh on any property change
-            if (string.IsNullOrEmpty(this.observablePropertyName))
+            if (!this.IsBound)
             {
-                this.Refresh();
                 return;
             }
-            
-            // If the property name matches our observable property name, refresh
-            if (string.Equals(name, this.observablePropertyName, StringComparison.Ordinal))
+
+            this.setTarget(this.getSource());
+        }
+
+        private void OnSourceChanged()
+        {
+            if (!this.IsBound)
             {
-                this.Refresh();
+                return;
             }
+
+            this.Refresh();
+        }
+    }
+
+    /// <summary>
+    /// One-way binding with conversion: A(TSource) -> B(TTarget).
+    /// </summary>
+    public sealed class OneWayBinding<TSource, TTarget> : Binding
+    {
+        private readonly Func<TSource> getSource;
+        private readonly Action<TTarget> setTarget;
+        private readonly Func<TSource, TTarget> convert;
+        private readonly Subscription onSourceChanged;
+
+        private readonly Action sourceChangedHandler;
+
+        public OneWayBinding(
+            Func<TSource> getSource,
+            Action<TTarget> setTarget,
+            Subscription onSourceChanged,
+            Func<TSource, TTarget> convert)
+        {
+            this.getSource = getSource ?? throw new ArgumentNullException(nameof(getSource));
+            this.setTarget = setTarget ?? throw new ArgumentNullException(nameof(setTarget));
+            this.onSourceChanged = onSourceChanged;
+            this.convert = convert ?? throw new ArgumentNullException(nameof(convert));
+
+            this.sourceChangedHandler = this.OnSourceChanged;
+        }
+
+        protected override void OnBind()
+        {
+            this.onSourceChanged.Subscribe(this.sourceChangedHandler);
+        }
+
+        protected override void OnUnbind()
+        {
+            this.onSourceChanged.Unsubscribe(this.sourceChangedHandler);
+        }
+
+        public override void Refresh()
+        {
+            if (!this.IsBound)
+            {
+                return;
+            }
+
+            this.setTarget(this.convert(this.getSource()));
+        }
+
+        private void OnSourceChanged()
+        {
+            if (!this.IsBound)
+            {
+                return;
+            }
+
+            this.Refresh();
         }
     }
 }
