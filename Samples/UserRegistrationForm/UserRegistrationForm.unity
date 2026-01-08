@@ -1471,7 +1471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monoInstallers:
-  - {fileID: 0}
+  - {fileID: 563177443}
   scriptableInstallers: []
 --- !u!114 &563177443
 MonoBehaviour:
