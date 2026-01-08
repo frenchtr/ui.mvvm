@@ -11,7 +11,7 @@ namespace TravisRFrench.UI.MVVM.Samples.Editor
 {
 	[CustomEditor(typeof(View<>), true)]
 	[CanEditMultipleObjects]
-	public sealed class ViewGenericEditorUITK : UnityEditor.Editor
+	public sealed class ViewEditor : UnityEditor.Editor
 	{
 		private static readonly Type OpenViewType = typeof(View<>);
 
@@ -22,23 +22,26 @@ namespace TravisRFrench.UI.MVVM.Samples.Editor
 		public override VisualElement CreateInspectorGUI()
 		{
 			var root = new VisualElement();
-
+			
 			// Safe default inspector for the View itself.
 			InspectorElement.FillDefaultInspector(root, this.serializedObject, this);
+			
+			// View Model Container
+			var container = new VisualElement();
 
 			var viewType = this.target.GetType();
 			var vmType = GetViewModelType(viewType);
 
 			if (vmType == null)
 			{
-				root.Add(new HelpBox("Could not determine ViewModel type from View<> base class.", HelpBoxMessageType.Warning));
-				return root;
+				container.Add(new HelpBox("Could not determine ViewModel type from View<> base class.", HelpBoxMessageType.Warning));
+				return container;
 			}
 
 			var hasInstance = TryGetViewModelInstance(this.target, viewType, out var vmInstance);
 
-			root.Add(BuildViewModelSection(vmType, hasInstance ? vmInstance : null));
-			return root;
+			container.Add(BuildViewModelSection(vmType, hasInstance ? vmInstance : null));
+			return container;
 		}
 
 		private static Type? GetViewModelType(Type concreteViewType)
