@@ -17,13 +17,13 @@ namespace TravisRFrench.UI.MVVM.Core
         protected virtual void ConfigureManualBindings(IBindingRegistry registry)
         {
         }
-
-        protected override void OnLifeCycleWireEndpoints()
+        
+        protected override void OnLifecycleSetup()
         {
             this.BindAll();
         }
 
-        protected override void OnLifeCycleDispose()
+        protected override void OnLifecycleDispose()
         {
             this.bindingRegistry.Dispose();
         }
