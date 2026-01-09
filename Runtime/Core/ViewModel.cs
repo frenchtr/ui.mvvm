@@ -7,7 +7,6 @@ namespace TravisRFrench.UI.MVVM.Core
 {
     public abstract class ViewModel : IViewModel
     {
-        
         public event PropertyChangedEventHandler PropertyChanged;
         
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
