@@ -10,9 +10,14 @@ namespace TravisRFrench.UI.MVVM.Core
     {
         private readonly IBindingRegistry bindingRegistry = new BindingRegistry();
         
-        [Inject]
-        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public TViewModel ViewModel { get; private set; }
+
+        [Inject]
+        private void Inject(TViewModel viewModel)
+        {
+            this.ViewModel = viewModel;
+            this.ViewModel.Initialize();
+        }
         
         protected virtual void ConfigureManualBindings(IBindingRegistry registry)
         {
@@ -26,6 +31,9 @@ namespace TravisRFrench.UI.MVVM.Core
         protected override void OnLifecycleDispose()
         {
             this.bindingRegistry.Dispose();
+            this.ViewModel.Dispose();
+
+            this.ViewModel = null;
         }
 
         private void BindAll()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -6,6 +7,7 @@ namespace TravisRFrench.UI.MVVM.Core
 {
     public abstract class ViewModel : IViewModel
     {
+        
         public event PropertyChangedEventHandler PropertyChanged;
         
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
@@ -23,6 +25,23 @@ namespace TravisRFrench.UI.MVVM.Core
             field = value;
             this.NotifyPropertyChanged(propertyName);
             return true;
+        }
+
+        void IViewModel.Initialize()
+        {
+            this.OnInitialize();
+        }
+        
+        void IDisposable.Dispose()
+        {
+        }
+
+        protected virtual void OnInitialize()
+        {
+        }
+
+        protected virtual void OnDispose()
+        {
         }
     }
 }
