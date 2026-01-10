@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.Registration
@@ -32,6 +33,24 @@ namespace TravisRFrench.UI.MVVM.DataBinding.Registration
             }
             
             this.bindings.Remove(binding);
+        }
+        
+        public void BindAll()
+        {
+            foreach (var binding in this.Bindings
+                         .Where(b => !b.IsBound))
+            {
+                binding.Bind();
+            }
+        }
+
+        public void UnbindAll()
+        {
+            foreach (var binding in this.Bindings
+                         .Where(b => b.IsBound))
+            {
+                binding.Unbind();
+            }
         }
         
         public void Dispose()

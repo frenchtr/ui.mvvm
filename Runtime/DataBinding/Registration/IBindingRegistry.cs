@@ -10,5 +10,7 @@ namespace TravisRFrench.UI.MVVM.DataBinding.Registration
         
         void Register(IBinding binding);
         void Unregister(IBinding binding);
+        void BindAll();
+        void UnbindAll();
     }
 }

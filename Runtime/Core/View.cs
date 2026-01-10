@@ -25,7 +25,8 @@ namespace TravisRFrench.UI.MVVM.Core
         
         protected override void OnLifecycleSetup()
         {
-            this.BindAll();
+            this.ConfigureManualBindings(this.bindingRegistry);
+            this.bindingRegistry.BindAll();
         }
 
         protected override void OnLifecycleDispose()
@@ -34,24 +35,6 @@ namespace TravisRFrench.UI.MVVM.Core
             this.ViewModel.Dispose();
 
             this.ViewModel = null;
-        }
-
-        private void BindAll()
-        {
-            foreach (var binding in this.bindingRegistry.Bindings
-                         .Where(b => !b.IsBound))
-            {
-                binding.Bind();
-            }
-        }
-
-        private void UnbindAll()
-        {
-            foreach (var binding in this.bindingRegistry.Bindings
-                         .Where(b => b.IsBound))
-            {
-                binding.Unbind();
-            }
         }
     }
 }
