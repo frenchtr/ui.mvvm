@@ -1552,7 +1552,7 @@ MonoBehaviour:
   userNameInputField: {fileID: 1991072584}
   passwordInputField: {fileID: 273997695}
   acceptMarketingEmailsToggle: {fileID: 372952558}
-  button: {fileID: 2009546078}
+  submitButton: {fileID: 2009546078}
 --- !u!114 &563177445
 MonoBehaviour:
   m_ObjectHideFlags: 0
