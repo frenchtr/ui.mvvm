@@ -68,6 +68,9 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
 
         public void Submit()
         {
+            // NOTE: This whole method should probably be called async to avoid blocking UI but
+            // that's outside the scope of this demonstration.
+            
             // Validate/sanitize input
             // TODO
             
