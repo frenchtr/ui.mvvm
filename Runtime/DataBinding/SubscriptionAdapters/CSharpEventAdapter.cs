@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 
-namespace UI.Binding.Adapters
+namespace TravisRFrench.UI.MVVM.DataBinding.SubscriptionAdapters
 {
 	/// <summary>
 	/// Adapts a C# event-like add/remove pair (event Action) to Subscription.

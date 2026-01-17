@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 using UnityEngine.Events;
 
-namespace UI.Binding.Adapters
+namespace TravisRFrench.UI.MVVM.DataBinding.SubscriptionAdapters
 {
 	/// <summary>
 	/// Adapts a UnityEvent (no args) to Subscription.
@@ -65,7 +65,7 @@ namespace UI.Binding.Adapters
 				if (callback == null) throw new ArgumentNullException(nameof(callback));
 				if (handlers.ContainsKey(callback)) return;
 
-				UnityAction<T> ua = arg0 => callback.Invoke();
+				UnityAction<T> ua = _ => callback.Invoke();
 				handlers.Add(callback, ua);
 				this.unityEvent.AddListener(ua);
 			}

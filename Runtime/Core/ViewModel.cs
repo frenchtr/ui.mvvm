@@ -33,6 +33,7 @@ namespace TravisRFrench.UI.MVVM.Core
         
         void IDisposable.Dispose()
         {
+            this.OnDispose();
         }
 
         protected virtual void OnInitialize()

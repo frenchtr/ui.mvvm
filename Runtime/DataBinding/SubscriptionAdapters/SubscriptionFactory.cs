@@ -3,7 +3,7 @@ using System.ComponentModel;
 using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 using UnityEngine.Events;
 
-namespace UI.Binding.Adapters
+namespace TravisRFrench.UI.MVVM.DataBinding.SubscriptionAdapters
 {
 	public sealed class SubscriptionFactory
 	{

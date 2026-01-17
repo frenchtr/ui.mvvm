@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 
-namespace UI.Binding.Adapters
+namespace TravisRFrench.UI.MVVM.DataBinding.SubscriptionAdapters
 {
 	/// <summary>
 	/// Adapts INotifyPropertyChanged to fire when a specific property changes.

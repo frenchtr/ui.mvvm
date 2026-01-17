@@ -1,6 +1,6 @@
 ﻿using TravisRFrench.UI.MVVM.DataBinding.BindingTypes;
 
-namespace UI.Binding.Adapters
+namespace TravisRFrench.UI.MVVM.DataBinding.SubscriptionAdapters
 {
 	/// <summary>
 	/// Adapts various event systems into a framework-agnostic Subscription.
