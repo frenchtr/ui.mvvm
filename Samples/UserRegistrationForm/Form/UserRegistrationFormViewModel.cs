@@ -1,4 +1,5 @@
 using TravisRFrench.UI.MVVM.Core;
+using TravisRFrench.UI.MVVM.Samples.Common;
 using TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Services;
 using TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Users;
 
@@ -7,12 +8,24 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
     public class UserRegistrationFormViewModel : ViewModel, IUserRegistrationFormViewModel
     {
         private readonly IUserRegistrationService userRegistrationService;
+        private string title;
         private string userName;
-        private string passwordHash;
+        private string password;
         private string emailAddress;
         private string firstName;
         private string lastName;
-        private bool isAllowedToReceiveMarketingEmails;
+        private bool hasAcceptedMarketingEmails;
+
+        public UserRegistrationFormViewModel(IUserRegistrationService userRegistrationService)
+        {
+            this.userRegistrationService = userRegistrationService;
+        }
+
+        public string Title
+        {
+            get => this.title;
+            set => this.SetField(ref this.title, value);
+        }
 
         public string UserName
         {
@@ -20,10 +33,13 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
             set => this.SetField(ref this.userName, value);
         }
 
-        public string PasswordHash
+        public string Password
         {
-            get => this.passwordHash;
-            set => this.SetField(ref this.passwordHash, value);
+            // Note: In a production setting we would never store the plain-text password in our view model,
+            // but store the hash instead. In this example we defer hashing until submission time so that 
+            // it doesn't bog down our as-you-type updates.
+            get => this.password;
+            set => this.SetField(ref this.password, value);
         }
 
         public string EmailAddress
@@ -44,10 +60,10 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
             set => this.SetField(ref this.lastName, value);
         }
 
-        public bool IsAllowedToReceiveMarketingEmails
+        public bool HasAcceptedMarketingEmails
         {
-            get => this.isAllowedToReceiveMarketingEmails;
-            set => this.SetField(ref this.isAllowedToReceiveMarketingEmails, value);
+            get => this.hasAcceptedMarketingEmails;
+            set => this.SetField(ref this.hasAcceptedMarketingEmails, value);
         }
 
         public void Submit()
@@ -57,14 +73,14 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Form
             
             // Create the user
             var preferences = new UserPreferences(
-                isAllowedToReceiveMarketingEmails: this.IsAllowedToReceiveMarketingEmails);
+                isAllowedToReceiveMarketingEmails: this.HasAcceptedMarketingEmails);
             
             var user = User.Create(
                 this.FirstName, 
                 this.LastName, 
                 this.EmailAddress, 
                 this.UserName,
-                this.PasswordHash, 
+                PasswordUtilities.HashPasswordText(this.Password), 
                 preferences
                 );
             

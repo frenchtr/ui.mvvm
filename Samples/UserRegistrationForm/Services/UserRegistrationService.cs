@@ -14,8 +14,8 @@ namespace TravisRFrench.UI.MVVM.Samples.UserRegistrationForm.Services
         
         public void RegisterUser(IUser user)
         {
-            Debug.Log($"User with username '{user.UserName}' has been registered.");
             this.userDatabaseService.SaveUser(user);
+            Debug.Log($"User with username '{user.UserName}' has been registered.");
         }
     }
 }

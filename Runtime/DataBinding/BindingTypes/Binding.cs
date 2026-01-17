@@ -1,5 +1,4 @@
 using System;
-using TravisRFrench.UI.MVVM.DataBinding.Builders;
 
 namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 {
@@ -8,10 +7,6 @@ namespace TravisRFrench.UI.MVVM.DataBinding.BindingTypes
 	/// </summary>
 	public abstract class Binding : IBinding, IDisposable
 	{
-		public static OneWayBindingBuilder<TValue> CreateOneWay<TValue>() => new();
-		public static TwoWayBindingBuilder<TValue> CreateTwoWay<TValue>() => new();
-		public static CommandBindingBuilder CreateCommand() => new();
-
 		public bool IsBound { get; private set; }
 
 		public void Bind()

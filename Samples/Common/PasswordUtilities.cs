@@ -8,7 +8,7 @@ namespace TravisRFrench.UI.MVVM.Samples.Common
         // OWASP commonly recommends PBKDF2 with a high iteration count; tune as needed for your target devices.
         private const int SaltSize = 16;        // 128-bit
         private const int HashSize = 32;        // 256-bit
-        private const int Iterations = 210_000; // reasonable 2024+ baseline; adjust per perf budget
+        private const int Iterations = 210000; // reasonable 2024+ baseline; adjust per perf budget
 
         /// <summary>
         /// Creates a password-safe hash using PBKDF2 (SHA-256) with a random salt.
